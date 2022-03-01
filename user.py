@@ -1,7 +1,6 @@
 import random
-
 from Crypto.cipher import AES
-from Crytpo.Hash import SHA256
+from Crypto.Hash import SHA256
 
 class User():
     def __init__(self, p, g, initialVector, username):

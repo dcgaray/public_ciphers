@@ -73,9 +73,11 @@ class User():
         return bText.decode("utf-8")
 
 
-
-
-
-
     def whoami(self):
-        print(f"I am {self.name}: {self.secKey}")
+        return self.name
+
+    def updatePandG(self, newP, newG):
+        self.p = newP
+        self.g = newG
+
+

@@ -26,7 +26,7 @@ def task1():
     encryptedMsg1 =usr1.encrypt("I am a secret")
     encryptedMsg2 =usr2.encrypt("I am also a secret")
 
-    #print(usr1.decrypt(encryptedMsg1)) 
+    print(usr1.decrypt(encryptedMsg2)) 
     print(usr2.decrypt(encryptedMsg1)) 
 
 

@@ -6,11 +6,11 @@ from Crypto.Hash import SHA256
 
 class User():
     def __init__(self, p, g, initialVector, username):
+        self.name = username
         self.priv = random.randint(0, p-1)
         self.pub = pow(g, self.priv, p) 
         self.p = p
         self.g = g
-        self.name = username
         self.IV = initialVector #IV variable
         self.secKey = None #var for da secret key
         self.symKey = None #var for symmetric key
@@ -21,8 +21,8 @@ class User():
         # user's public key
     def genSecretKey(self, pubKey):
         # A = g^a % p
-        # g = pubInput, a = self.priv, p = self.pub
-        self.secKey = pow(pubKey, self.priv, self.pub) 
+        # g = pubInput, a = self.priv, p = self.p 
+        self.secKey = pow(pubKey, self.priv, self.p) 
 
     #performs SHA256 hashing and gets a 2byte symmetric key for AES-CBC
     def genSymmetricKey(self):

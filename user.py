@@ -13,6 +13,7 @@ class User():
         self.secKey = None #var for da secret key
         self.symKey = None #var for symmetric key
         self.encryKey = None
+        self.bOrder = "little" #byteOrder mode necessary for Python's "to_bytes func"
 
     #generates a secret key used for symmetric encryption from another
         # user's public key
@@ -23,13 +24,35 @@ class User():
 
     #performs SHA256 hashing and gets a 2byte symmetric key for AES-CBC
     def genSymmetricKey(self):
-        bOrder = "little" #byteOrder mode necessary for Python's "to_bytes func"
         hashThingy = SHA256.new()
-        hashThingy.update(self.secKey.to_bytes(128, bOrder))
+        hashThingy.update(self.secKey.to_bytes(128, self.bOrder))
         digest = hashThingy.hexdigest()
         intDigest = int(digest, 16) #get our hex digest into a hex integer
-        byteKey = intDigest.to_bytes(35, bOrder)
+        byteKey = intDigest.to_bytes(35, self.bOrder)
         self.symKey = byteKey[:16]
+
+    #takes a messsages and encrypts it using AES-CBC
+    def encrypt(self, msg):
+        blckLen = 16 
+        enc = AES.new(self.symKey, AES.MODE_CBC, self.IV)
+        plaintext = bytes(msg, "utf-8")
+        ptLen = len(plaintext)
+
+        #check to see if we have to #PCKS 7 pad it
+        if (ptLen % blckLen) != 0:
+            padLen = blckLen - (ptLen % blckLen)
+            for idx in range(padLen):
+                plaintext += idx.to_bytes(1, self.bOrder)
+        #no padding necessary 
+        else:
+            for i in range(blckLen):
+                plaintext += b"16"
+
+        return enc.encrypt(plaintext)
+
+    #takes an AES-CBC encrypted messages and returns the plaintext
+
+
 
     def whoami(self):
         print(f"I am {self.name}: {self.secKey}")

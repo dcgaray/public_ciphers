@@ -1,5 +1,6 @@
 import random,secrets
 from user import User
+from keyFixing import task3
 
 def main():
     '''
@@ -10,9 +11,13 @@ def main():
     g = int("A4D1CBD5C3FD34126765A442EFB99905F8104DD258AC507FD6406CFF14266D31266FEA1E5C41564B777E690F5504F213160217B4B01B886A5E91547F9E2749F4D7FBD7D3B9A92EE1909D0D2263F80A76A6A24C087A091F531DBF0A0169B6A28AD662A4D18E73AFA32D779D5918D08BC8858F4DCEF97C2A24855E6EEB22B3B2E5", 16)
     task1()
     task2(p,g)
+    '''
     task2(p,1)
     task2(p,p)
     task2(p,p-1)
+    '''
+    task3()
+
 
 def task1():
     IV = secrets.token_bytes(16)
@@ -57,7 +62,7 @@ def task1():
     print(f"{usr3.whoami()} found: {decMsg1}")
     print(f"{usr4.whoami()} found: {decMsg2}")
 
-def task2(p,g):
+def task2(p, g):
     IV = secrets.token_bytes(16)
     usr1 = User(p,g,IV, "Alice")
     usr2 = User(p,g,IV, "Bob") 

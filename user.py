@@ -72,12 +72,7 @@ class User():
             bText = bText[:bLen - nonPadCount]
         return bText.decode("utf-8")
 
-
+    #returns the username provided when the user was first created
     def whoami(self):
         return self.name
-
-    def updatePandG(self, newP, newG):
-        self.p = newP
-        self.g = newG
-
 

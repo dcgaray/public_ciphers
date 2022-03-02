@@ -8,6 +8,8 @@ class User():
     def __init__(self, p, g, initialVector, username):
         self.priv = random.randint(0, p-1)
         self.pub = pow(g, self.priv, p) 
+        self.p = p
+        self.g = g
         self.name = username
         self.IV = initialVector #IV variable
         self.secKey = None #var for da secret key

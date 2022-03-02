@@ -27,7 +27,7 @@ def task1():
     encryptedMsg2 =usr2.encrypt("I am also a secret")
 
     #print(usr1.decrypt(encryptedMsg1)) 
-    print(usr2.decrypt(encryptedMsg2)) 
+    print(usr2.decrypt(encryptedMsg1)) 
 
 
 if __name__ == "__main__":

@@ -12,13 +12,13 @@ def task3():
 	# keytup = (pu, pr)
 	keyTup = generateKeys(bit)
 	ciphertext = encrypt(iMsg, keyTup[0])
-	print(ciphertext)
+	print(f"CipherText: {ciphertext}")
 	plaintext = decrypt(ciphertext,keyTup[1])
-	print(plaintext)
+	print(f"Encoded-Plaintext: {plaintext}")
 
 	IV = get_random_bytes(16)
 	recoveredMsg =keyFixing(keyTup[0], keyTup[1], msg, IV)
-	print(recoveredMsg)
+	print(f"Recovered Message: {recoveredMsg}")
 
 def generateKeys(bit):
 	p1 = getPrime(bit)
@@ -39,34 +39,35 @@ def decrypt(encMsg, pr):
 	return pow(encMsg, pr[0], mod=pr[1])
 
 def keyFixing(pu, pr, msg, iv):
-
+	blckLen = 16
+	byteOrder = "little"
 	cPrime = pu[1]
 
 	secKey = pow(cPrime, pr[0], mod=pr[1])
-	secKey = secKey.to_bytes(128, "little")
+	secKey = secKey.to_bytes(128, byteOrder)
 	hashThingy = SHA256.new()
 	hashThingy.update(secKey)
 	digest = hashThingy.hexdigest()	
-	intDigest = int(digest, 16)
-	byteKey = intDigest.to_bytes(35, "little")
-	key = byteKey[:16]
+	intDigest = int(digest, blckLen)
+	byteKey = intDigest.to_bytes(35, byteOrder)
+	key = byteKey[:blckLen]
 
 	enc = AES.new(key, AES.MODE_CBC, iv)
 	bMsg = bytes(msg, "utf-8")
-	cNought = enc.encrypt(pad(bMsg, 16))
+	cNought = enc.encrypt(pad(bMsg, blckLen))
 
 	hashThingy2 = SHA256.new()
 	secKey2 = 0
-	secKey2 = secKey2.to_bytes(128, "little")
+	secKey2 = secKey2.to_bytes(128, byteOrder)
 	hashThingy2.update(secKey2)
 	digest = hashThingy2.hexdigest()
-	intDigest2 = int(digest, 16)
-	byteKey2 = intDigest2.to_bytes(35, "little")
-	key2 = byteKey2[:16]
+	intDigest2 = int(digest, blckLen)
+	byteKey2 = intDigest2.to_bytes(35, byteOrder)
+	key2 = byteKey2[:blckLen]
 	enc2 = AES.new(key2, AES.MODE_CBC, iv)
 
 	pText = enc2.decrypt(cNought)
-	pText = unpad(pText, 16)
+	pText = unpad(pText, blckLen)
 	plaintext = pText.decode("utf-8") 
 
 	return plaintext

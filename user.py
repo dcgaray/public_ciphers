@@ -31,7 +31,7 @@ class User():
         byteKey = intDigest.to_bytes(35, self.bOrder)
         self.symKey = byteKey[:16]
 
-    #takes a messsages and encrypts it using AES-CBC
+    #takes a messsage and encrypts it using AES-CBC
     def encrypt(self, msg):
         blckLen = 16 
         enc = AES.new(self.symKey, AES.MODE_CBC, self.IV)
@@ -51,6 +51,27 @@ class User():
         return enc.encrypt(plaintext)
 
     #takes an AES-CBC encrypted messages and returns the plaintext
+    def decrypt(self, ciphertext):
+        enc = AES.new(self.symKey, AES.MODE_CBC, self.IV)
+        bText = enc.decrypt(ciphertext) # this is in bytes
+        bLen = len(bText)
+
+        nonPadCount = 0
+        for i in range(bLen-1, bLen, -1):
+            # loop through our bytes until we find out where our padding occurs
+            if bText[bLen - 1] ==  bText[i]:
+                j += 1
+            #PCKS 7 dictates the padding be the number of bytes remaining for pad
+            else: 
+                break
+
+        #remove our padding
+        if nonPadCount == bText[bLen - 1]:
+            bText = bText[:bLen - nonPadCount]
+        return bText.decode("utf-8")
+
+
+
 
 
 

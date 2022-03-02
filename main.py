@@ -22,10 +22,12 @@ def task1():
 
     usr1.genSymmetricKey() 
     usr2.genSymmetricKey() 
-    print(usr1.symKey)
-    print(usr2.symKey)
 
-    print(usr1.encrypt("lmao"))
+    encryptedMsg1 =usr1.encrypt("I am a secret")
+    encryptedMsg2 =usr2.encrypt("I am also a secret")
+
+    #print(usr1.decrypt(encryptedMsg1)) 
+    print(usr2.decrypt(encryptedMsg2)) 
 
 
 if __name__ == "__main__":

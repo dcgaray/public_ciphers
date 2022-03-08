@@ -7,18 +7,21 @@ from Crypto.Util.Padding import pad, unpad
 def task3():
 	blckLen = 16
 	msg = input("What is your message my G?: ")
-	bit = int(input("Bit-length?(256, 1024, 2048): "))
+	bitLen = int(input("Bit-length?(256, 1024, 2048): "))
 	hMsg = msg.encode().hex()
 	iMsg = int(hMsg, blckLen)
-	# keytup = (pu, pr)
-	keyTup = generateKeys(bit)
-	ciphertext = encrypt(iMsg, keyTup[0])
+	keyTup = generateKeys(bitLen)
+	pubKey = keyTup[0]		
+	privKey = keyTup[1]
+	ciphertext = encrypt(iMsg, pubKey)
 	print(f"CipherText: {ciphertext}")
-	plaintext = decrypt(ciphertext,keyTup[1])
+	plaintext = decrypt(ciphertext,privKey)
 	print(f"Encoded-Plaintext: {plaintext}")
 
+	##^^^Textbook RSA
+
 	IV = get_random_bytes(blckLen)
-	recoveredMsg =keyFixing(keyTup[0], keyTup[1], msg, IV)
+	recoveredMsg =keyFixing(pubKey, privKey, msg, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
 def generateKeys(bit):
@@ -27,11 +30,11 @@ def generateKeys(bit):
 	n = p1 * p2
 	#what comes 1 after n?
 	e = 65537
-	o = (p1 - 1) * (p2 - 1)
-	d = pow(e, -1, o)
-	pu = [e, n]
-	pr = [d, n]
-	return (pu, pr)
+	omega = (p1 - 1) * (p2 - 1)
+	d = pow(e, -1, omega)
+	publicKey = [e, n]
+	privateKey = [d, n]
+	return (publicKey, privateKey)
 
 def encrypt(msg, pu):
 	return pow(msg, pu[0], pu[1])
@@ -48,7 +51,9 @@ def keyFixing(pu, pr, msg, iv):
 	secKey = secKey.to_bytes(128, byteOrder)
 	hashThingy = SHA256.new()
 	hashThingy.update(secKey)
+	#convert our ASCII MSG into Hex
 	digest = hashThingy.hexdigest()	
+	#convert our hex value into an integer
 	intDigest = int(digest, blckLen)
 	byteKey = intDigest.to_bytes(35, byteOrder)
 	key = byteKey[:blckLen]

@@ -19,7 +19,7 @@ def main():
     task2(p,p-1,True)
     task2(p,1,True)
     '''
-#    task3()
+    task3()
 
 
 def task1(p,g):

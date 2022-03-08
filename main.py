@@ -93,20 +93,20 @@ def task2(p, g,mal=False):
     if mal == False:
         return
 
+    usr3 = User(p,g,IV, "Mallory")
+    usr3.pub = 1
+    usr3.secKey = 1
+    usr3.genSymmetricKey()
+    recoveredMsg1 = usr3.decrypt(encMsg1)
+    recoveredMsg2 = usr3.decrypt(encMsg2)
+
     if g == 1:
-        print("g is equal to 1! Time to abuse Modulus Math(keys will be 1)")
-        usr3 = User(p,g,IV, "Mallory")
-        usr3.pub = 1
-        usr3.secKey = 1
-        usr3.genSymmetricKey()
-        recoveredMsg1 = usr3.decrypt(encMsg1)
-        recoveredMsg2 = usr3.decrypt(encMsg2)
+        print("g==1: Abused Modulus Math(keys will be 1)")
         print(f"I am {usr3.whoami()} and these are the messages I recoverd")
         print(f"Message1: {recoveredMsg1}Message2: {recoveredMsg2}\n")
 
     elif g == p:
-        print("g is equal to p! Time to abuse Modulus Math(keys will be 0)")
-        usr3 = User(p,g,IV, "Mallory")
+        print("g==p: Abused Modulus Math(keys will be 0)")
         usr3.pub = 0 
         usr3.secKey = 0 
         usr3.genSymmetricKey()
@@ -116,13 +116,7 @@ def task2(p, g,mal=False):
         print(f"Message1: {recoveredMsg1}Message2:{recoveredMsg2}\n")
 
     elif g == p - 1:
-        print("g is equal to p-1! Time to abuse Modulus Math(keys will be 1)")
-        usr3 = User(p,g,IV, "Mallory")
-        usr3.pub = 1
-        usr3.secKey = 1
-        usr3.genSymmetricKey()
-        recoveredMsg1 = usr3.decrypt(encMsg1)
-        recoveredMsg2 = usr3.decrypt(encMsg2)
+        print("g==p-1: Abused Modulus Math(keys will be 1)")
         print(f"I am {usr3.whoami()} and these are the messages I recoverd")
         print(f"Message1: {recoveredMsg1}Message2: {recoveredMsg2}\n")
 

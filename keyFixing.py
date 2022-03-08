@@ -26,9 +26,11 @@ def task3():
 	recoveredMsg = MalleabilitySignatures(encryptedMsg1, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
-def generateKeys(bit):
-	p1 = getPrime(bit)
-	p2 = getPrime(bit)
+#generates RSA public and private keys based off a provided string-length
+# int -> int list * int list
+def generateKeys(bitLen):
+	p1 = getPrime(bitLen)
+	p2 = getPrime(bitLen)
 	n = p1 * p2
 	#what comes 1 after n?
 	e = 65537
@@ -38,9 +40,12 @@ def generateKeys(bit):
 	privateKey = [d, n]
 	return (publicKey, privateKey)
 
+#takes a string and private key{e,n} and encrypts the message"
+# string * int list -> byte string
 def encrypt(msg, pu):
 	return pow(msg, pu[0], pu[1])
 
+#inverse of encrypt 
 def decrypt(encMsg, pr):
 	return pow(encMsg, pr[0], pr[1])
 

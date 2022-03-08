@@ -5,12 +5,13 @@ from Crypto.Hash import SHA256
 
 
 class User():
-    def __init__(self, p, g, initialVector, username):
+    # In the case of our assignment p=primeNumber q=PrimitiveRoot of p
+    def __init__(self, p, q, initialVector, username):
         self.name = username
         self.randElem = random.randint(0, p-1)
-        self.pub = pow(g, self.randElem, p) 
+        self.pub = pow(q, self.randElem, p) 
         self.p = p
-        self.g = g
+        self.q = q 
         self.IV = initialVector #IV variable
         self.secKey = None #var for da secret key
         self.symKey = None #var for symmetric key
@@ -57,7 +58,6 @@ class User():
         enc = AES.new(self.symKey, AES.MODE_CBC, self.IV)
         bText = enc.decrypt(ciphertext) # this is in bytes
         bLen = len(bText)
-
         nonPadCount = 0
         for i in range(bLen-1, bLen, -1):
             # loop through our bytes until we find out where our padding occurs

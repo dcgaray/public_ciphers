@@ -15,11 +15,11 @@ def main():
     task1(37,5)
     task2(p,g)
     '''
-    task2(p,p)
-    task2(p,p-1)
-    task2(p,1)
+    task2(p,p,True)
+    task2(p,p-1,True)
+    task2(p,1,True)
     '''
-    task3()
+#    task3()
 
 
 def task1(p,g):
@@ -68,13 +68,13 @@ def task1(p,g):
     print(f"{usr3.whoami()} found: {decMsg1}")
     print(f"{usr4.whoami()} found: {decMsg2}")
 
-def task2(p, g):
+def task2(p, g,mal=False):
     IV = secrets.token_bytes(16)
     usr1 = User(p,g,IV, "Alice")
     usr2 = User(p,g,IV, "Bob") 
     #modification of the public keys by Mallory
-    usr1.pub = p
-    usr2.pub = p
+    #usr1.pub = p
+    #usr2.pub = p
 
     usr1.genSecretKey(usr2.pub)    
     usr2.genSecretKey(usr1.pub)    
@@ -93,6 +93,40 @@ def task2(p, g):
 
     print(f"{usr1.whoami()} found: {decMsg1}")
     print(f"{usr2.whoami()} found: {decMsg2}")
+
+    #case where we don't want to showcase Mallory's attacks!
+    if mal == False:
+        return
+
+    if g == 1:
+        usr3 = User(p,g,IV, "Mallory")
+        usr3.pub = 1
+        usr3.secKey = 1
+        usr3.genSymmetricKey()
+        recoveredMsg1 = usr3.decrypt(encMsg1)
+        recoveredMsg2 = usr3.decrypt(encMsg2)
+        print(f"I am {usr3.whoami()} and these are the messages I recoverd")
+        print(f"Message1: {recoveredMsg1}Message2: {recoveredMsg2}\n")
+
+    elif g == p:
+        usr3 = User(p,g,IV, "Mallory")
+        usr3.pub = 0 
+        usr3.secKey = 0 
+        usr3.genSymmetricKey()
+        recoveredMsg1 = usr3.decrypt(encMsg1)
+        recoveredMsg2 = usr3.decrypt(encMsg2)
+        print(f"I am {usr3.whoami()} and these are the messages I recoverd")
+        print(f"Message1: {recoveredMsg1}Message2:{recoveredMsg2}\n")
+
+    elif g == p - 1:
+        usr3 = User(p,g,IV, "Mallory")
+        usr3.pub = 1
+        usr3.secKey = 1
+        usr3.genSymmetricKey()
+        recoveredMsg1 = usr3.decrypt(encMsg1)
+        recoveredMsg2 = usr3.decrypt(encMsg2)
+        print(f"I am {usr3.whoami()} and these are the messages I recoverd")
+        print(f"Message1: {recoveredMsg1}Message2: {recoveredMsg2}\n")
 
 
 if __name__ == "__main__":

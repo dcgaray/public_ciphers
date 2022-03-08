@@ -22,7 +22,7 @@ def task3():
 
 	IV = get_random_bytes(blckLen)
 	encryptedMsg1 = keyFixing(pubKey, privKey, msg, IV) 
-	
+
 	recoveredMsg = MalleabilitySignatures(encryptedMsg1, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
@@ -87,10 +87,4 @@ def MalleabilitySignatures(cNought, iv):
 	plaintext = pText.decode("utf-8") 
 
 	return plaintext
-
-
-
-
-
-
 

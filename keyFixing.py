@@ -8,6 +8,7 @@ def task3():
 	blckLen = 16
 	msg = input("What is your message my G?: ")
 	bitLen = int(input("Bit-length?(256, 1024, 2048): "))
+	#vvv Textbook RSA
 	hMsg = msg.encode().hex()
 	iMsg = int(hMsg, blckLen)
 	keyTup = generateKeys(bitLen)
@@ -17,11 +18,12 @@ def task3():
 	print(f"CipherText: {ciphertext}")
 	plaintext = decrypt(ciphertext,privKey)
 	print(f"Encoded-Plaintext: {plaintext}")
-
 	##^^^Textbook RSA
 
 	IV = get_random_bytes(blckLen)
-	recoveredMsg =keyFixing(pubKey, privKey, msg, IV)
+	encryptedMsg1 = keyFixing(pubKey, privKey, msg, IV) 
+	
+	recoveredMsg = MalleabilitySignatures(encryptedMsg1, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
 def generateKeys(bit):
@@ -47,6 +49,7 @@ def keyFixing(pu, pr, msg, iv):
 	byteOrder = "little"
 	cPrime = pu[1]
 
+	#pr[0] = e, pr[1]= n
 	secKey = pow(cPrime, pr[0], pr[1])
 	secKey = secKey.to_bytes(128, byteOrder)
 	hashThingy = SHA256.new()
@@ -61,6 +64,13 @@ def keyFixing(pu, pr, msg, iv):
 	enc = AES.new(key, AES.MODE_CBC, iv)
 	bMsg = bytes(msg, "utf-8")
 	cNought = enc.encrypt(pad(bMsg, blckLen))
+
+	return cNought
+
+#Mallory recreating valid signatures
+def MalleabilitySignatures(cNought, iv):
+	blckLen = 16
+	byteOrder = "little"
 
 	hashThingy2 = SHA256.new()
 	secKey2 = 0 
@@ -77,8 +87,6 @@ def keyFixing(pu, pr, msg, iv):
 	plaintext = pText.decode("utf-8") 
 
 	return plaintext
-
-
 
 
 

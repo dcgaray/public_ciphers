@@ -5,10 +5,11 @@ from Crypto.Util.number import getPrime
 from Crypto.Util.Padding import pad, unpad
 
 def task3():
+	blckLen = 16
 	msg = input("What is your message my G?: ")
 	bit = int(input("Bit-length?(256, 1024, 2048): "))
 	hMsg = msg.encode().hex()
-	iMsg = int(hMsg, 16)
+	iMsg = int(hMsg, blckLen)
 	# keytup = (pu, pr)
 	keyTup = generateKeys(bit)
 	ciphertext = encrypt(iMsg, keyTup[0])
@@ -16,7 +17,7 @@ def task3():
 	plaintext = decrypt(ciphertext,keyTup[1])
 	print(f"Encoded-Plaintext: {plaintext}")
 
-	IV = get_random_bytes(16)
+	IV = get_random_bytes(blckLen)
 	recoveredMsg =keyFixing(keyTup[0], keyTup[1], msg, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
@@ -33,17 +34,17 @@ def generateKeys(bit):
 	return (pu, pr)
 
 def encrypt(msg, pu):
-	return pow(msg, pu[0], mod=pu[1])
+	return pow(msg, pu[0], pu[1])
 
 def decrypt(encMsg, pr):
-	return pow(encMsg, pr[0], mod=pr[1])
+	return pow(encMsg, pr[0], pr[1])
 
 def keyFixing(pu, pr, msg, iv):
 	blckLen = 16
 	byteOrder = "little"
 	cPrime = pu[1]
 
-	secKey = pow(cPrime, pr[0], mod=pr[1])
+	secKey = pow(cPrime, pr[0], pr[1])
 	secKey = secKey.to_bytes(128, byteOrder)
 	hashThingy = SHA256.new()
 	hashThingy.update(secKey)
@@ -57,7 +58,7 @@ def keyFixing(pu, pr, msg, iv):
 	cNought = enc.encrypt(pad(bMsg, blckLen))
 
 	hashThingy2 = SHA256.new()
-	secKey2 = 0
+	secKey2 = 0 
 	secKey2 = secKey2.to_bytes(128, byteOrder)
 	hashThingy2.update(secKey2)
 	digest = hashThingy2.hexdigest()

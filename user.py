@@ -7,8 +7,8 @@ from Crypto.Hash import SHA256
 class User():
     def __init__(self, p, g, initialVector, username):
         self.name = username
-        self.priv = random.randint(0, p-1)
-        self.pub = pow(g, self.priv, p) 
+        self.randElem = random.randint(0, p-1)
+        self.pub = pow(g, self.randElem, p) 
         self.p = p
         self.g = g
         self.IV = initialVector #IV variable
@@ -21,8 +21,8 @@ class User():
         # user's public key
     def genSecretKey(self, pubKey):
         # A = g^a % p
-        # g = pubInput, a = self.priv, p = self.p 
-        self.secKey = pow(pubKey, self.priv, self.p) 
+        # g = pubInput, a = self.randElem, p = self.p 
+        self.secKey = pow(pubKey, self.randElem, self.p) 
 
     #performs SHA256 hashing and gets a 2byte symmetric key for AES-CBC
     def genSymmetricKey(self):

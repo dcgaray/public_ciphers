@@ -4,8 +4,11 @@ from Crypto.Random import get_random_bytes
 from Crypto.Util.number import getPrime
 from Crypto.Util.Padding import pad, unpad
 
+
+byteOrder = "little"
+blckLen = 16
+
 def task3():
-	blckLen = 16
 	msg = input("What is your message my G?: ")
 	bitLen = int(input("Bit-length?(256, 1024, 2048): "))
 	#vvv Textbook RSA
@@ -19,10 +22,8 @@ def task3():
 	plaintext = decrypt(ciphertext,privKey)
 	print(f"Encoded-Plaintext: {plaintext}")
 	##^^^Textbook RSA
-
 	IV = get_random_bytes(blckLen)
 	encryptedMsg1 = keyFixing(pubKey, privKey, msg, IV) 
-
 	recoveredMsg = MalleabilitySignatures(encryptedMsg1, IV)
 	print(f"Recovered Message: {recoveredMsg}")
 
@@ -46,12 +47,11 @@ def encrypt(msg, pu):
 	return pow(msg, pu[0], pu[1])
 
 #inverse of encrypt 
+# byte_string ->
 def decrypt(encMsg, pr):
 	return pow(encMsg, pr[0], pr[1])
 
 def keyFixing(pu, pr, msg, iv):
-	blckLen = 16
-	byteOrder = "little"
 	cPrime = pu[1]
 
 	#pr[0] = e, pr[1]= n
@@ -74,9 +74,6 @@ def keyFixing(pu, pr, msg, iv):
 
 #Mallory recreating valid signatures
 def MalleabilitySignatures(cNought, iv):
-	blckLen = 16
-	byteOrder = "little"
-
 	hashThingy2 = SHA256.new()
 	secKey2 = 0 
 	secKey2 = secKey2.to_bytes(128, byteOrder)
